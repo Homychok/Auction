@@ -1,0 +1,13 @@
+create table public.lot
+(
+    lot_id            bigint  not null
+        constraint lot_pk
+            primary key,
+    lot_status        varchar not null,
+    lot_title         varchar,
+    lot_description   varchar,
+    lot_current_price integer,
+    lot_last_bid      varchar
+        add constraint lot_bid_bidder_name_fk
+            foreign key (lot_last_bid) references public.bid;
+);
