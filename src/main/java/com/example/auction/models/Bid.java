@@ -5,9 +5,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 
-@Table(name = "bid")
+@Entity
 @Data
 @NoArgsConstructor
 public class Bid {
@@ -21,8 +20,8 @@ public class Bid {
     private String bidderName;
     @Column(name = "bidder_date")
     private LocalDateTime bidDate;
-    private Lot lotId;
+    private long lotId;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "lot_last_bid")
-    private Bid bid;
+    private Lot lot;
 }

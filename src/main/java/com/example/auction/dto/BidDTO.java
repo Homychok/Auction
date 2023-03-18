@@ -12,13 +12,13 @@ import java.time.LocalDateTime;
 public class BidDTO {
     private String bidderName;
     private LocalDateTime bidDate;
-    private Lot lotId;
+    private long lotId;
 
     public static BidDTO fromBid (Bid bid) {
         BidDTO bidDTO = new BidDTO();
         bidDTO.setBidDate(bid.getBidDate());
         bidDTO.setBidderName(bid.getBidderName());
-        bidDTO.setLotId(bid.getLotId());
+        bidDTO.setLotId(bid.getLot().getLotId());
         return bidDTO;
     }
 
@@ -26,7 +26,6 @@ public class BidDTO {
         Bid bid = new Bid();
         bid.setBidDate(this.getBidDate());
         bid.setBidderName(this.getBidderName());
-        bid.setLotId(this.getLotId());
         return bid;
     }
 }

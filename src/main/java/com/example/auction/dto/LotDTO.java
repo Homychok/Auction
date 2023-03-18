@@ -8,7 +8,7 @@ import javax.persistence.Column;
 @Data
 @NoArgsConstructor
 public class LotDTO {
-    private int lotId;
+    private Long lotId;
     private String lotStatus;
     private String lotTitle;
     private String lotDescription;
