@@ -8,14 +8,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class FullLotDTO {
     private int lotLastBid;
-    private int lotId;
-    private String lotStatus;
+    private long lotId;
+    private Lot.LotStatus lotStatus;
     private String lotTitle;
     private String lotDescription;
     private int lotCurrentPrice;
     private int lotStartPrice;
     private int lotBidPrice;
-    public static FullLotDTO fromLot (Lot lot) {
+    public static FullLotDTO fromFullLot (Lot lot) {
         FullLotDTO fullLotDTO = new FullLotDTO();
         fullLotDTO.setLotId(lot.getLotId());
         fullLotDTO.setLotStatus(lot.getLotStatus());
@@ -28,7 +28,7 @@ public class FullLotDTO {
         return fullLotDTO;
     }
 
-    public Lot toLot() {
+    public Lot toFullLot() {
         Lot lot = new Lot();
         lot.setLotId(this.getLotId());
         lot.setLotStatus(this.getLotStatus());

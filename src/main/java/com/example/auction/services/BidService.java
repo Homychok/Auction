@@ -80,5 +80,7 @@ public class BidService {
     public Long getCountNumberOfBidByLotId(int bidderId, Long lotId) {
         return bidRepository.getCountNumberOfBidByLotId(bidderId, lotId);
     }
-
+    public Long getMaxBiddersOfBidByLotId(int bidderId, Long lotId) {
+        return bidRepository.getMaxBiddersOfBidByLotId(bidderId, lotId);
+    }
 }

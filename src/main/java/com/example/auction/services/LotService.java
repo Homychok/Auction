@@ -29,6 +29,19 @@ public class LotService {
         Lot createNewLot = lotRepository.save(lot);
         return LotDTO.fromLot(createNewLot);
     }
+    public LotDTO updateStatus (Long lotId, String lotStatus) {
+//        Lot lot = lotDTO.toLot();
+        Lot updateInfoAboutLot = lotRepository.updateLotStatus(lotId, lotStatus);
+        return LotDTO.fromLot(updateInfoAboutLot);
+    }
+//    public LotDTO updateStatusStopped (Long lotId, String lotStatus) {
+//        Lot updateInfoAboutLot = lotRepository.updateLotStatus(lotId, lotStatus);
+//        return LotDTO.fromLot(updateInfoAboutLot);
+//    }
+    public String findStatus (Long lotId) {
+        String lotStatus = String.valueOf(lotRepository.findLotStatusByLotId(lotId));
+        return lotStatus;
+    }
     public LotDTO updateInfoAboutLot (LotDTO lotDTO) {
         Lot lot = lotDTO.toLot();
         Lot updateInfoAboutLot = lotRepository.save(lot);
@@ -41,6 +54,11 @@ public class LotService {
         PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageSize);
         return lotRepository.findAll(pageRequest).getContent();
     }
+    public List<Lot> getAllLotsByPage (Integer pageNumber, Integer pageSize, String lotStatus) {
+        PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageSize);
+        return lotRepository.findAll(pageRequest).getContent();
+    }
+
     public LotDTO getLotById (Long lotId) {
         return LotDTO.fromLot(lotRepository.findById(lotId).get());
     }
@@ -60,7 +78,7 @@ public class LotService {
         return bidDTOs;
     }
     public Collection<LotDTO> getLotsByStatus(String lotStatus){
-        return lotRepository.findByLotStatusIs(lotStatus)
+        return lotRepository.findByLotStatus(lotStatus)
                 .stream()
                 .map(LotDTO::fromLot)
                 .collect(Collectors.toList()); }

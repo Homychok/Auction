@@ -13,7 +13,7 @@ public class CreateLotDTO {
     private String lotDescription;
     private int lotStartPrice;
     private int lotBidPrice;
-    public static CreateLotDTO fromLot (Lot lot) {
+    public static CreateLotDTO fromCreateLotDTO (Lot lot) {
         CreateLotDTO createLotDTO = new CreateLotDTO();
         createLotDTO.setLotTitle(lot.getLotTitle());
         createLotDTO.setLotDescription(lot.getLotDescription());
@@ -22,7 +22,7 @@ public class CreateLotDTO {
         return createLotDTO;
     }
 
-    public Lot toLot() {
+    public Lot toCreateLotDTO() {
         Lot lot = new Lot();
         lot.setLotTitle(this.getLotTitle());
         lot.setLotDescription(this.getLotDescription());
