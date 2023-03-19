@@ -10,10 +10,10 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 public class Bid {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "lot_last_bid")
     private int lotLastBid;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "bidder_id")
     private int bidderId;
     @Column(name = "bidder_name")
