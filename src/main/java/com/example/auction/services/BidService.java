@@ -71,17 +71,14 @@ public class BidService {
                 .map(BidDTO::fromBid)
                 .collect(Collectors.toList());
     }
-    public BidDTO getFirstBidderForLot (LocalDateTime bidDate) {
-            return bidRepository.findBidByLotId(lotId).orElse;
+    public Long getFirstBidderByLotId (int bidderId, Long lotId) {
+            return bidRepository.findByBidDateMin(bidderId, lotId);
         }
-}
+    public Long getLastBidderByLotId (int bidderId, Long lotId) {
+        return bidRepository.findByBidDateMax(bidderId, lotId);
+    }
+    public Long getCountNumberOfBidByLotId(int bidderId, Long lotId) {
+        return bidRepository.getCountNumberOfBidByLotId(bidderId, lotId);
+    }
 
-/*
-List<Bid> bids = lotRepository.findById(lotId).get().getBids();
-        List<BidDTO> bidDTOs = new ArrayList<>();
-        for(Bid bid : bids) {
-            BidDTO bidDTO = BidDTO.fromBid(bid);
-            bidDTOs.add(bidDTO);
-        }
-        return bidDTOs;
- */
+}

@@ -4,13 +4,11 @@ import com.example.auction.dto.BidDTO;
 import com.example.auction.dto.LotDTO;
 import com.example.auction.models.Bid;
 import com.example.auction.models.Lot;
-import com.example.auction.repositories.BidRepository;
 import com.example.auction.repositories.LotRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -38,6 +36,10 @@ public class LotService {
     }
     public void deleteLotById (Long lotId) {
         lotRepository.deleteById(lotId);
+    }
+    public List<Lot> getAllLots (Integer pageNumber, Integer pageSize) {
+        PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageSize);
+        return lotRepository.findAll(pageRequest).getContent();
     }
     public LotDTO getLotById (Long lotId) {
         return LotDTO.fromLot(lotRepository.findById(lotId).get());

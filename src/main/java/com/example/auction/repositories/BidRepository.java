@@ -10,15 +10,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface BidRepository extends JpaRepository<Bid, Long> {
-//    @Query(value = "SELECT * FROM bid ", nativeQuery = true)
-//    Bid findByBidDate_Min(LocalDateTime bidDate);
-//    Bid findByLotLastBid_Max(LocalDateTime bidDate);
+
     List<Bid> findByBidderNameContainsIgnoreCase(String bidderName);
     List<Bid> findByBidDate(LocalDateTime bidDate);
-//    Optional<Bid> findBidByLotId(Long lotId);
-@Query(value = "SELECT * FROM bid ORDER BY age ASC LIMIT 5", nativeQuery = true)
-Long findByBidDate_Min();
-    @Query(value = "SELECT * FROM student ORDER BY age ASC LIMIT 5", nativeQuery = true)
-    Collection<Student> getFiveYoungestStudents();
-
+    @Query(value = "SELECT * FROM bid GROUP BY bidder_id WHERE lot_id = ?,bidder_id = ?  ORDER BY bidder_date ASC LIMIT 1", nativeQuery = true)
+    Long findByBidDateMin(int bidderId, Long lotId);
+    @Query(value = "SELECT * FROM bid GROUP BY bidder_id WHERE lot_id = ?,bidder_id = ?  ORDER BY bidder_date DESC LIMIT 1", nativeQuery = true)
+    Long findByBidDateMax(int bidderId, Long lotId);
+    @Query(value = "SELECT COUNT(bidder_date) FROM bid GROUP BY bidder_id WHERE lot_id = ?, bidder_id = ?", nativeQuery = true)
+    Long getCountNumberOfBidByLotId(int bidderId, Long lotId);
 }

@@ -11,7 +11,5 @@ import java.util.List;
 public interface LotRepository extends JpaRepository<Lot, Long> {
     List<Lot> findByLotStatusIs(String lotStatus);
     Lot findByLotTitleContainsIgnoreCase(String lotTitle);
-//    Bid findByBidDateMin(BidDTO bidDTO);
-//    Bid findByLotLastBidMax(LocalDateTime bidDate);
-//    Lot findByLotId(long lotId);
+
 }

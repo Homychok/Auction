@@ -27,6 +27,17 @@ private int lotStartPrice;
 private int lotBidPrice;
     @OneToMany(mappedBy = "lot")
     private List<Bid> bids;
-
+//    enum Queries {
+//        GET("SELECT * FROM employee INNER JOIN city ON employee.city_id = city.city_id AND id=(?)"),
+//        GET_ALL("SELECT * FROM employee INNER JOIN city ON employee.city_id = city.city_id"),
+//        INSERT("INSERT INTO employee(first_name, last_name, gender, age, city_id) VALUES ((?), (?), (?),(?),(?))"),
+//        DELETE("DELETE FROM employee WHERE id=(?)"),
+//        UPDATE("UPDATE employee SET age = (?) WHERE id=(?)");
+//
+//        String query;
+//        Queries(String query) {
+//            this.query = query;
+//        }
+//    }
 
 }
