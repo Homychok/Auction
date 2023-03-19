@@ -1,8 +1,0 @@
-create table public.bid
-(
-
-    bidder_name varchar not null,
-     constraint bid_pk
-                primary key,
-    bidder_data timestamp
-);

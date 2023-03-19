@@ -18,7 +18,7 @@ public class Lot {
     @Column(name = "lot_status")
     @Enumerated(EnumType.STRING)
     private LotStatus lotStatus;
-    @Column(name = "lot_title")
+    @Column(name = "lot_title", length = 64)
     private String lotTitle;
     @Column(name = "lot_description", length=4096)
     private String lotDescription;

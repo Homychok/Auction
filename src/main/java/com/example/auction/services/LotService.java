@@ -50,10 +50,14 @@ public class LotService {
     public void deleteLotById (Long lotId) {
         lotRepository.deleteById(lotId);
     }
-    public List<Lot> getAllLots (Integer pageNumber, Integer pageSize) {
+    public List<LotDTO> getAllLots (Integer pageNumber, Integer pageSize) {
         PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageSize);
-        return lotRepository.findAll(pageRequest).getContent();
+        return lotRepository.findAll(pageRequest).getContent()
+                .stream()
+                .map(LotDTO::fromLot)
+                .collect(Collectors.toList());
     }
+
     public List<Lot> getAllLotsByPage (Integer pageNumber, Integer pageSize, String lotStatus) {
         PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageSize);
         return lotRepository.findAll(pageRequest).getContent();

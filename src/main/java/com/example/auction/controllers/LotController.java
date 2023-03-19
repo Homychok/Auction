@@ -65,13 +65,14 @@ public class LotController {
     @GetMapping
     public ResponseEntity<Collection<LotDTO>> getAllLots(@RequestParam("page") Integer pageNumber,
                                                          @RequestParam("size") Integer pageSize,
-                                                         @RequestParam String lotStatus) {
-        if (lotStatus.isBlank()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+                                                         @RequestParam(required = false) String lotStatus) {
+        if (!lotStatus.isBlank()) {
+            return ResponseEntity.ok(lotService.getLotsByStatus(lotStatus));
         }
-        return ResponseEntity.ok(lotService.getLotsByStatus(lotStatus));
-//        Collection<LotDTO> lots = lotService.getLotsByStatus(lotStatus);
-//        return ResponseEntity.ok(lots);
+        if (pageSize <= 0 || pageSize > 50) {
+            return ResponseEntity.ok(lotService.getAllLots(pageNumber, 50));
+        }
+        return ResponseEntity.ok(lotService.getAllLots(pageNumber, pageSize));
     }
 //Ненужные методы:
 //    @GetMapping// GET http://localhost:8080/lots
@@ -161,6 +162,7 @@ public ResponseEntity<LotDTO> updateStatusAuctionStarted(@RequestBody Long lotId
 //        lotsPicService.uplodePicture(pictureId, LotsPicDTO);
 //        return ResponseEntity.ok().build();
 //    }
+
 }
 
 
