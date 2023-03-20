@@ -1,7 +1,6 @@
 package com.example.auction.dto;
 
 import com.example.auction.models.Bid;
-import com.example.auction.models.Lot;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,24 +12,23 @@ public class BidDTO {
     private String bidderName;
     private LocalDateTime bidDate;
     private Long lotId;
-    private Integer lotStartPrice;
-    private Integer lotBidPrice;
+//    private Integer startPrice;
+//    private Integer bidPrice;
 
-    public static BidDTO fromBid (Bid bid) {
+    public static BidDTO fromBidToBidDTO (Bid bid) {
         BidDTO bidDTO = new BidDTO();
         bidDTO.setBidDate(bid.getBidDate());
         bidDTO.setBidderName(bid.getBidderName());
-        bidDTO.setLotId(bid.getLot().getLotId());
-        bidDTO.setLotStartPrice(bid.getLot().getLotStartPrice());
-        bidDTO.setLotBidPrice(bid.getLot().getLotBidPrice());
+//        bidDTO.setStartPrice(bid.getLot().getStartPrice());
+//        bidDTO.setBidPrice(bid.getLot().getBidPrice());
+        bidDTO.setLotId(bid.getLot().getId());
         return bidDTO;
     }
 
-    public Bid toBid() {
+    public Bid fromBidDTOToBid(BidDTO bidDTO) {
         Bid bid = new Bid();
-        bid.setBidDate(this.getBidDate());
-        bid.setBidderName(this.getBidderName());
-
+        bid.setBidDate(bidDTO.getBidDate());
+        bid.setBidderName(bidDTO.getBidderName());
         return bid;
     }
 }

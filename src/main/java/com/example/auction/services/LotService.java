@@ -1,8 +1,10 @@
 package com.example.auction.services;
 
 import com.example.auction.dto.BidDTO;
+import com.example.auction.dto.CreateLotDTO;
 import com.example.auction.dto.FullLotDTO;
 import com.example.auction.dto.LotDTO;
+import com.example.auction.enums.LotStatus;
 import com.example.auction.models.Bid;
 import com.example.auction.models.Lot;
 import com.example.auction.repositories.BidRepository;
@@ -31,77 +33,100 @@ public class LotService {
         this.bidRepository = bidRepository;
         this.lotRepository = lotRepository;
     }
-    public LotDTO createNewLot (LotDTO lotDTO) {
-        Lot lot = lotDTO.toLot();
+    public LotDTO createNewLot (CreateLotDTO createLotDTO) {
+        Lot lot = CreateLotDTO.fromCreateLotDTO(createLotDTO);
+        lot.setStatus(LotStatus.CREATED);
         Lot createNewLot = lotRepository.save(lot);
-        return LotDTO.fromLot(createNewLot);
+        return LotDTO.fromLotToLotDTO(createNewLot);
     }
-    public LotDTO updateStatus (Long lotId, String lotStatus) {
-//        Lot lot = lotDTO.toLot();
-        Lot updateInfoAboutLot = lotRepository.updateLotStatus(lotId, lotStatus);
-        return LotDTO.fromLot(updateInfoAboutLot);
+
+    public List<LotDTO> getAllLotsByStatusOnPage (LotStatus lotStatus, Integer pageNumber) {
+        PageRequest pageRequest = PageRequest.of(pageNumber - 1, 10);
+        return lotRepository.findAllByStatus(lotStatus, pageRequest)
+                .stream()
+                .map(LotDTO::fromLotToLotDTO)
+                .collect(Collectors.toList());
+    }
+    public Collection<FullLotDTO> getAllFullLots() {
+        return lotRepository.findAll()
+                .stream()
+                .map(FullLotDTO::fromLotToFullLotDTO)
+                .collect(Collectors.toList());
+    }
+    private Integer sumCurrentPrice(Long lotId, Integer lotBidPrice, Integer lotStartPrice) {
+        return (int) (bidRepository.getBidderCount(lotId) * lotBidPrice + lotStartPrice);
+    }
+    public FullLotDTO getFullLotById (Long id) {
+        FullLotDTO fullLotDTO = FullLotDTO.fromLotDTOToFullLotDTO(getLotById(id));
+        Integer currentPrice = sumCurrentPrice(id, fullLotDTO.getBidPrice(), fullLotDTO.getStartPrice());
+        fullLotDTO.setCurrentPrice(currentPrice);
+        fullLotDTO.setLastBid(findInfoABoutLastBid(id));
+        return fullLotDTO;
     }
 //    public LotDTO updateStatusStopped (Long lotId, String lotStatus) {
 //        Lot updateInfoAboutLot = lotRepository.updateLotStatus(lotId, lotStatus);
 //        return LotDTO.fromLot(updateInfoAboutLot);
 //    }
-    public String findStatus (Long lotId) {
-        String lotStatus = String.valueOf(lotRepository.findLotStatusByLotId(lotId));
-        return lotStatus;
+    public LotDTO getLotById (Long lotId) {
+        return LotDTO.fromLot(lotRepository.findById(lotId).get());
     }
+    public void updateStatusToStarted(Long id) {
+        Lot lot = lotRepository.findById(id).get();
+        lot.setStatus(LotStatus.STARTED);
+        lotRepository.save(lot);
+    }
+    public void updateStatusToStopped(Long id) {
+        Lot lot = lotRepository.findById(id).get();
+        lot.setStatus(LotStatus.STOPPED);
+        lotRepository.save(lot);
+    }
+    //    public Collection<LotDTO> getLotsByStatus(String status){
+//        return lotRepository.findByStatus(status)
+//                .stream()
+//                .map(LotDTO::fromLot)
+//                .collect(Collectors.toList());
+//    }
+    //    public LotDTO updateStatus (Long id, String status) {
+//        Lot updateInfoAboutLot = lotRepository.updateLotStatus(id, status);
+//        return LotDTO.fromLot(updateInfoAboutLot);
+//    }
+//    public String findStatus (Long id) {
+//        String lotStatus = String.valueOf(lotRepository.findLotStatusByLotId(id));
+//        return lotStatus;
+//    }
 //    public LotDTO updateInfoAboutLot (LotDTO lotDTO) {
 //        Lot lot = lotDTO.toLot();
 //        Lot updateInfoAboutLot = lotRepository.save(lot);
 //        return LotDTO.fromLot(updateInfoAboutLot);
 //    }
-    public void deleteLotById (Long lotId) {
-        lotRepository.deleteById(lotId);
-    }
-    public List<LotDTO> getAllLots (Integer pageNumber, Integer pageSize) {
-        PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageSize);
-        return lotRepository.findAll(pageRequest).getContent()
-                .stream()
-                .map(LotDTO::fromLot)
-                .collect(Collectors.toList());
-    }
-
-    public List<Lot> getAllLotsByPage (Integer pageNumber, Integer pageSize, String lotStatus) {
-        PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageSize);
-        return lotRepository.findAll(pageRequest).getContent();
-    }
-
-    public LotDTO getLotById (Long lotId) {
-        return LotDTO.fromLot(lotRepository.findById(lotId).get());
-    }
+//
+//    public void deleteLotById (Long lotId) {
+//        lotRepository.deleteById(lotId);
+//    }
+//    public List<Lot> getAllLotsByPage (Integer pageNumber, Integer pageSize, String lotStatus) {
+//        PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageSize);
+//        return lotRepository.findAll(pageRequest).getContent();
+//    }
+//
 //    public Collection<LotDTO> getAllLots() {
 //        return lotRepository.findAll()
 //                .stream()
 //                .map(LotDTO::fromLot)
 //                .collect(Collectors.toList());
 //    }
-    public Collection<FullLotDTO> getAllFullLots() {
-        return lotRepository.findAll()
-                .stream()
-                .map(FullLotDTO::fromFullLot)
-                .collect(Collectors.toList());
-    }
-    public Collection<BidDTO> getBiddersByLotId(Long lotId) {
-        List<Bid> bids = lotRepository.findById(lotId).get().getBids();
-        List<BidDTO> bidDTOs = new ArrayList<>();
-        for(Bid bid : bids) {
-            BidDTO bidDTO = BidDTO.fromBid(bid);
-            bidDTOs.add(bidDTO);
-        }
-        return bidDTOs;
-    }
-    public Collection<LotDTO> getLotsByStatus(String lotStatus){
-        return lotRepository.findByLotStatus(lotStatus)
-                .stream()
-                .map(LotDTO::fromLot)
-                .collect(Collectors.toList()); }
-    public LotDTO getLotByTitle (String lotTitle) {
-        return LotDTO.fromLot(lotRepository.findByLotTitleContainsIgnoreCase(lotTitle));
-    }
+//
+//    public Collection<BidDTO> getBiddersByLotId(Long lotId) {
+//        List<Bid> bids = lotRepository.findById(lotId).get().getBids();
+//        List<BidDTO> bidDTOs = new ArrayList<>();
+//        for(Bid bid : bids) {
+//            BidDTO bidDTO = BidDTO.fromBid(bid);
+//            bidDTOs.add(bidDTO);
+//        }
+//        return bidDTOs;
+//    }
+//    public LotDTO getLotByTitle (String lotTitle) {
+//        return LotDTO.fromLot(lotRepository.findByLotTitleContainsIgnoreCase(lotTitle));
+//    }
 //    public Collection<FullLotDTO> getAllLotsForExport(Long bidderId, Long lotId) {
 //        return lotRepository.findAll().stream()
 //                .map(FullLotDTO::fromLot)
@@ -109,15 +134,10 @@ public class LotService {
 //                .peek(lot -> (lot).setLotBidPrice(findInfoABoutLastBid(bidderId,lotId)
 //                .getLotBidPrice();
 //    }
-    private Integer sumCurrentPrice(Long lotId, Integer lotBidPrice, Integer lotStartPrice) {
-        return (int) (bidRepository.getBidderCount(lotId) * lotBidPrice + lotStartPrice);
-    }
-    public FullLotDTO createNewFullLot (FullLotDTO fullLotDTO) {
-        Lot lot = fullLotDTO.toFullLot();
-        Lot createNewFullLot = lotRepository.save(lot);
-        return FullLotDTO.fromFullLot(createNewFullLot);
-    }
-    public FullLotDTO getFullLotById (Long lotId) {
-        return FullLotDTO.fromFullLot(lotRepository.findById(lotId).get());
-    }
+
+//    public FullLotDTO createNewFullLot (FullLotDTO fullLotDTO) {
+//        Lot lot = fullLotDTO.toFullLot();
+//        Lot createNewFullLot = lotRepository.save(lot);
+//        return FullLotDTO.fromFullLot(createNewFullLot);
+//    }
 }

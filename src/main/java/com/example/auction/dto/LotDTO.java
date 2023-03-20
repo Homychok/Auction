@@ -1,38 +1,38 @@
 package com.example.auction.dto;
 
+import com.example.auction.enums.LotStatus;
 import com.example.auction.models.Lot;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
 @Data
 @NoArgsConstructor
 public class LotDTO {
-    private Long lotId;
-    private Lot.LotStatus lotStatus;
-    private String lotTitle;
-    private String lotDescription;
-    private int lotStartPrice;
-    private int lotBidPrice;
-    public static LotDTO fromLot (Lot lot) {
+    private Long id;
+    private LotStatus status;
+    private String title;
+    private String description;
+    private Integer startPrice;
+    private Integer bidPrice;
+    public static LotDTO fromLotToLotDTO (Lot lot) {
         LotDTO lotDTO = new LotDTO();
-        lotDTO.setLotId(lot.getLotId());
-        lotDTO.setLotStatus(lot.getLotStatus());
-        lotDTO.setLotTitle(lot.getLotTitle());
-        lotDTO.setLotDescription(lot.getLotDescription());
-        lotDTO.setLotBidPrice(lot.getLotBidPrice());
-        lotDTO.setLotStartPrice(lot.getLotStartPrice());
+        lotDTO.setId(lot.getId());
+        lotDTO.setStatus(lot.getStatus());
+        lotDTO.setTitle(lot.getTitle());
+        lotDTO.setDescription(lot.getDescription());
+        lotDTO.setBidPrice(lot.getBidPrice());
+        lotDTO.setStartPrice(lot.getStartPrice());
         return lotDTO;
     }
 
-    public Lot toLot() {
+    public Lot toLotFromLotDTO(LotDTO lotDTO) {
         Lot lot = new Lot();
-        lot.setLotId(this.getLotId());
-        lot.setLotStatus(this.getLotStatus());
-        lot.setLotTitle(this.getLotTitle());
-        lot.setLotDescription(this.getLotDescription());
-        lot.setLotStartPrice(this.getLotStartPrice());
-        lot.setLotBidPrice(this.getLotBidPrice());
+        lot.setId(lotDTO.getId());
+        lot.setStatus(lotDTO.getStatus());
+        lot.setTitle(lotDTO.getTitle());
+        lot.setDescription(lotDTO.getDescription());
+        lot.setStartPrice(lotDTO.getStartPrice());
+        lot.setBidPrice(lotDTO.getBidPrice());
         return lot;
     }
 }

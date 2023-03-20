@@ -1,12 +1,11 @@
 package com.example.auction.controllers;
 
 import com.example.auction.dto.BidDTO;
+import com.example.auction.dto.CreateLotDTO;
 import com.example.auction.dto.FullLotDTO;
 import com.example.auction.dto.LotDTO;
-import com.example.auction.models.Bid;
+import com.example.auction.enums.LotStatus;
 import com.example.auction.models.Lot;
-//import com.example.auction.services.CreateLotService;
-//import com.example.auction.services.FullLotService;
 import com.example.auction.services.BidService;
 import com.example.auction.services.LotService;
 import org.apache.commons.csv.CSVFormat;
@@ -20,11 +19,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.time.LocalDateTime;
 import java.util.Collection;
 
 @RestController
-@RequestMapping("lots")
+@RequestMapping("lot")
 public class LotController {
     private LotService lotService;
     private BidService bidService;
@@ -40,51 +38,70 @@ public class LotController {
     /*
 1.Возвращает первого ставившего на этот лот
  */
-    @GetMapping("/{lotId}/first")
-    public ResponseEntity<Long> getFirstBidderByLotId(int bidderId, Long lotId) {
-        return ResponseEntity.ok(bidService.getFirstBidderByLotId(bidderId, lotId));
+    @GetMapping("/{id}/first")
+    public ResponseEntity<Long> getFirstBidderByLotId(Long id, Long lotId) {
+        return ResponseEntity.ok(bidService.getFirstBidderByLotId(id, lotId));
     }
     /*
 2.Возвращает имя ставившего на данный лот наибольшее количество раз
 */
-    @GetMapping("/{lotId}/frequent")
-    public ResponseEntity<Long> getMaxBiddersOfBidByLotId(int bidderId, Long lotId) {
-        return ResponseEntity.ok(bidService.getMaxBiddersOfBidByLotId(bidderId, lotId));
+    @GetMapping("/{id}/frequent")
+    public ResponseEntity<Long> getMaxBiddersOfBidByLotId(Long id, Long lotId) {
+        return ResponseEntity.ok(bidService.getMaxBiddersOfBidByLotId(id, lotId));
     }
 /*
 3.Получить полную информацию о лоте
  */
-    @GetMapping("/{lotId}")
-    public ResponseEntity<FullLotDTO> getFullLotById(@PathVariable Long lotId) {
-        FullLotDTO lotDTO = lotService.getFullLotById(lotId);
-        if (lotId == null) {
+    @GetMapping("/{id}")
+    public ResponseEntity<FullLotDTO> getFullLotById(@PathVariable Long id) {
+        FullLotDTO lotDTO = lotService.getFullLotById(id);
+        if (id == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         return ResponseEntity.ok(lotDTO);
     }
-
     /*
     4.Начать торги по лоту
      */
-    @PutMapping("/{lotId}/start")
-    public ResponseEntity<LotDTO> updateStatusAuctionStarted(@RequestBody Long lotId) {
-        LotDTO updateInfoAboutLot = lotService.updateStatus(lotId, "STARTED");
+    @PostMapping("/{id}/start")
+    public ResponseEntity<LotDTO> updateStatusAuctionStart(@RequestBody Long id) {
+        LotDTO updateInfoAboutLot = lotService.getLotById(id);
         if (updateInfoAboutLot == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        if (lotId == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        if (updateInfoAboutLot.getStatus().equals(LotStatus.STARTED)) {
+            return ResponseEntity.status(HttpStatus.OK).build();
         }
-        return ResponseEntity.ok(updateInfoAboutLot);
+        if (updateInfoAboutLot.getStatus().equals(LotStatus.STOPPED)) {
+            lotService.updateStatusToStarted(id);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }
+        if (updateInfoAboutLot.getStatus().equals(LotStatus.CREATED)) {
+            lotService.updateStatusToStarted(id);
+            return ResponseEntity.status(HttpStatus.OK).build();
+
+        }
+        return ResponseEntity.ok().build();
+//        LotDTO updateInfoAboutLot = lotService.updateStatus(id, "STARTED");
+//        if (updateInfoAboutLot == null) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+//        }
+//        if (id == null) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+//        }
+//        return ResponseEntity.ok(updateInfoAboutLot);
     }
     /*
 5.Сделать ставку по лоту
  */
-    @PostMapping("/{lotId}/bid")
+    @PostMapping("/{id}/bid")
     public ResponseEntity<BidDTO> createNewBidder(@RequestBody BidDTO bidDTO,
                                                   @RequestBody LotDTO lotDTO) {
-        String lotStatus = lotService.findStatus(lotDTO.getLotId());
-        if (lotStatus == "STARTED") {
+        LotDTO findInfoAboutLot = lotService.getLotById(lotDTO.getId());
+        if (findInfoAboutLot == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        if (findInfoAboutLot.getStatus().equals(LotStatus.STARTED)) {
             BidDTO createNewBidder = bidService.createNewBidder(bidDTO);
             return ResponseEntity.ok(createNewBidder);
         }
@@ -93,42 +110,52 @@ public class LotController {
     /*
 6.Остановить торги по лоту
  */
-    @PostMapping("/{lotId}/stop")
-    public ResponseEntity<LotDTO> updateStatusAuctionStop(@RequestBody Long lotId) {
-        LotDTO updateInfoAboutLot = lotService.updateStatus(lotId, "STOPPED");
-        if (updateInfoAboutLot == null) {
+    @PostMapping("/{id}/stop")
+    public ResponseEntity<LotDTO> updateStatusAuctionStop(@RequestBody Long id) {
+        LotDTO findInfoAboutLot = lotService.getLotById(id);
+        if (findInfoAboutLot == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        if (lotId == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        if (findInfoAboutLot.getStatus().equals(LotStatus.STOPPED)) {
+            return ResponseEntity.status(HttpStatus.OK).build();
         }
-        return ResponseEntity.ok(updateInfoAboutLot);
+        if (findInfoAboutLot.getStatus().equals(LotStatus.STARTED)) {
+            lotService.updateStatusToStopped(id);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }
+        if (findInfoAboutLot.getStatus().equals(LotStatus.CREATED)) {
+            lotService.updateStatusToStopped(id);
+            return ResponseEntity.status(HttpStatus.OK).build();
+
+        }
+//        LotDTO updateInfoAboutLot = lotService.updateStatus(id, "STOPPED");
+//        if (updateInfoAboutLot == null) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+//        }
+//        if (id == null) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+//        }
+        return ResponseEntity.ok(findInfoAboutLot);
     }
     /*
 7.Создает новый лот
  */
     @PostMapping
-    public ResponseEntity<LotDTO> createNewLot(@RequestBody LotDTO lotDTO) {
-        LotDTO createNewLot = lotService.createNewLot(lotDTO);
-        if (createNewLot == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+    public ResponseEntity<LotDTO> createNewLot(@RequestBody CreateLotDTO createLotDTO) {
+        LotDTO createNewLot = lotService.createNewLot(createLotDTO);
         return ResponseEntity.ok(createNewLot);
     }
     /*
     8.Получить все лоты, основываясь на фильтре статуса и номере страницы
      */
     @GetMapping
-    public ResponseEntity<Collection<LotDTO>> getAllLots(@RequestParam("page") Integer pageNumber,
-                                                         @RequestParam("size") Integer pageSize,
-                                                         @RequestParam(required = false) String lotStatus) {
-        if (!lotStatus.isBlank()) {
-            return ResponseEntity.ok(lotService.getLotsByStatus(lotStatus));
+    public ResponseEntity<Collection<LotDTO>> getAllLots(@RequestParam LotStatus lotStatus,
+                                                         @RequestParam(name = "page", required = false) Integer pageNumber) {
+        if (pageNumber <= 0) {
+            return ResponseEntity.ok(lotService.getAllLotsByStatusOnPage(lotStatus, 1));
         }
-        if (pageSize <= 0 || pageSize > 50) {
-            return ResponseEntity.ok(lotService.getAllLots(pageNumber, 50));
-        }
-        return ResponseEntity.ok(lotService.getAllLots(pageNumber, pageSize));
+
+        return ResponseEntity.ok(lotService.getAllLotsByStatusOnPage(lotStatus, pageNumber));
     }
     /*
 9. Экспортировать все лоты в файл CSV
@@ -141,11 +168,11 @@ public class LotController {
 
         for (FullLotDTO lot : lots) {
             csvPrinter.printRecord(lot.getLotId(),
-                    lot.getLotTitle(),
-                    lot.getLotStatus(),
-                    lot.getLotStartPrice(),
-                    lot.getLotLastBid(),
-                    lot.getLotCurrentPrice());
+                    lot.getTitle(),
+                    lot.getStatus(),
+                    lot.getStartPrice(),
+                    lot.getLastBid(),
+                    lot.getCurrentPrice());
         }
         csvPrinter.flush();
 
