@@ -26,6 +26,7 @@ public class Lot {
     private int lotCurrentPrice;
 private int lotStartPrice;
 private int lotBidPrice;
+private long bidderId;
     @OneToMany(mappedBy = "lot")
     private List<Bid> bids;
     public enum LotStatus {

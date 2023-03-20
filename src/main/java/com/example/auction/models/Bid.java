@@ -24,4 +24,7 @@ public class Bid {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "lot_last_bid")
     private Lot lot;
+    private Integer lotStartPrice;
+    private Integer lotBidPrice;
+
 }

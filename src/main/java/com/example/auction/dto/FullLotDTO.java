@@ -1,5 +1,6 @@
 package com.example.auction.dto;
 
+import com.example.auction.models.Bid;
 import com.example.auction.models.Lot;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class FullLotDTO {
     private int lotLastBid;
-    private long lotId;
+    private Long lotId;
     private Lot.LotStatus lotStatus;
     private String lotTitle;
     private String lotDescription;
