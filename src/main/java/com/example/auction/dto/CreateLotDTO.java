@@ -12,22 +12,22 @@ public class CreateLotDTO {
     private String description;
     private int startPrice;
     private int bidPrice;
-    public static Lot fromCreateLotDTO (CreateLotDTO createLotDTO) {
-        Lot lot = new Lot();
-        lot.setTitle(createLotDTO.getTitle());
-        lot.setDescription(createLotDTO.getDescription());
-        lot.setBidPrice(createLotDTO.getBidPrice());
-        lot.setStartPrice(createLotDTO.getStartPrice());
-        return lot;
-    }
-
-//    public Lot toCreateLotDTO() {
+//    public static Lot fromCreateLotDTO (CreateLotDTO createLotDTO) {
 //        Lot lot = new Lot();
-//        lot.setId(this.getId());
-//        lot.setTitle(this.getTitle());
-//        lot.setDescription(this.getDescription());
-//        lot.setStartPrice(this.getStartPrice());
-//        lot.setBidPrice(this.getBidPrice());
+//        lot.setTitle(createLotDTO.getTitle());
+//        lot.setDescription(createLotDTO.getDescription());
+//        lot.setBidPrice(createLotDTO.getBidPrice());
+//        lot.setStartPrice(createLotDTO.getStartPrice());
 //        return lot;
 //    }
+//
+////    public Lot toCreateLotDTO() {
+////        Lot lot = new Lot();
+////        lot.setId(this.getId());
+////        lot.setTitle(this.getTitle());
+////        lot.setDescription(this.getDescription());
+////        lot.setStartPrice(this.getStartPrice());
+////        lot.setBidPrice(this.getBidPrice());
+////        return lot;
+////    }
 }

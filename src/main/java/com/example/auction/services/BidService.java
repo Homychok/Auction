@@ -1,6 +1,8 @@
 package com.example.auction.services;
 
+import com.example.auction.dto.AllDTORealization;
 import com.example.auction.dto.BidDTO;
+import com.example.auction.dto.FullLotDTO;
 import com.example.auction.models.Bid;
 import com.example.auction.models.Lot;
 import com.example.auction.repositories.BidRepository;
@@ -9,28 +11,37 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 
 @Service
 @Transactional
 public class BidService {
     private BidRepository bidRepository;
     private LotRepository lotRepository;
+    private LotService lotService;
 
     public BidService(BidRepository bidRepository) {
         this.bidRepository = bidRepository;
     }
 @Autowired
-    public BidService(BidRepository bidRepository, LotRepository lotRepository) {
+    public BidService(BidRepository bidRepository, LotService lotService) {
         this.bidRepository = bidRepository;
-        this.lotRepository = lotRepository;
+        this.lotService = lotService;
     }
 
     public BidDTO createNewBidder (BidDTO bidDTO) {
-        Lot lot = lotRepository.findById(bidDTO.getLotId()).get();
-        Bid bid = bidDTO.toBidDTO();
+        Lot lot = AllDTORealization.fromLotDTOToLot(lotService.getLotById(bidDTO.getLotId()));
+        Bid bid = AllDTORealization.fromBidDTOtoBid(bidDTO);
         bid.setLot(lot);
+        bid.setBidDate(LocalDateTime.now());
         Bid createNewBidder = bidRepository.save(bid);
-        return BidDTO.fromBid(createNewBidder);
+        return AllDTORealization.fromBidToBidDTO(createNewBidder);
+//        FullLotDTO lot = FullLotDTO.fromLotToFullLotDTO(lotService.getLotById(l).getId());
+//        BidDTO bid = BidDTO.fromBid(new Bid());
+//        bid.setLotId(bid.getBidderName().g);
+//        bid.setBidDate(LocalDateTime.now());
+//        BidDTO createNewBidder = bidRepository.save(bidDTO);
+//        return BidDTO.fromBid(createNewBidder);
     }
     public Long getFirstBidderByLotId (Long id, Long lotId) {
         return bidRepository.findByBidDateMin(id, lotId);

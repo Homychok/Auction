@@ -167,7 +167,7 @@ public class LotController {
         CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT);
 
         for (FullLotDTO lot : lots) {
-            csvPrinter.printRecord(lot.getLotId(),
+            csvPrinter.printRecord(lot.getId(),
                     lot.getTitle(),
                     lot.getStatus(),
                     lot.getStartPrice(),

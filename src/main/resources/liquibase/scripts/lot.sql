@@ -9,6 +9,6 @@ CREATE TABLE lot (
                      start_price INTEGER NOT NULL,
                      bid_price  INTEGER NOT NULL,
                      current_price  INTEGER NOT NULL,
-                     last_bid  INTEGER NOT NULL
+                     last_bid  varchar(255) NOT NULL
 );
 

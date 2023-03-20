@@ -16,10 +16,9 @@ public interface BidRepository extends JpaRepository<Bid, Long> {
 
     List<Bid> findByBidderNameContainsIgnoreCase(String bidderName);
     List<Bid> findByBidDate(LocalDateTime bidDate);
-    @Query(value = "SELECT bidder_name AS bidderName, bid_date AS bidDate FROM bid GROUP BY id WHERE lot_id = ?2,id = ?1  ORDER BY bidder_date DESC LIMIT 1", nativeQuery = true)
-    Long findByBidDateMax(Long id, Long lotId);
-    @Query(value = "SELECT COUNT(bidder_date) FROM bid GROUP BY bidder_id WHERE lot_id = ?2, id = ?1", nativeQuery = true)
-    Long getCountNumberOfBidByLotId(Long id, Long lotId);
-    @Query(value = "SELECT COUNT(*) FROM bid WHERE lot_id = ?", nativeQuery = true)
-    Long getBidderCount(Long lotId);
+    @Query(value = "SELECT bidder_name AS bidderName FROM bid GROUP BY id WHERE lot_id = ? ORDER BY bidder_date DESC LIMIT 1", nativeQuery = true)
+    Bid findByBidDateMax(Long lotId);
+    @Query(value = "SELECT COUNT(*) FROM bid WHERE lot_id = ?1", nativeQuery = true)
+    Long getCountNumberOfBidByLotId(Long lotId);
+
 }

@@ -1,9 +1,6 @@
 package com.example.auction.services;
 
-import com.example.auction.dto.BidDTO;
-import com.example.auction.dto.CreateLotDTO;
-import com.example.auction.dto.FullLotDTO;
-import com.example.auction.dto.LotDTO;
+import com.example.auction.dto.*;
 import com.example.auction.enums.LotStatus;
 import com.example.auction.models.Bid;
 import com.example.auction.models.Lot;
@@ -14,7 +11,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,41 +30,46 @@ public class LotService {
         this.lotRepository = lotRepository;
     }
     public LotDTO createNewLot (CreateLotDTO createLotDTO) {
-        Lot lot = CreateLotDTO.fromCreateLotDTO(createLotDTO);
+        Lot lot = AllDTORealization.fromCreatedLotDTOToLot(createLotDTO);
         lot.setStatus(LotStatus.CREATED);
         Lot createNewLot = lotRepository.save(lot);
-        return LotDTO.fromLotToLotDTO(createNewLot);
+        return AllDTORealization.fromLotToLotDTO(createNewLot);
     }
 
     public List<LotDTO> getAllLotsByStatusOnPage (LotStatus lotStatus, Integer pageNumber) {
         PageRequest pageRequest = PageRequest.of(pageNumber - 1, 10);
         return lotRepository.findAllByStatus(lotStatus, pageRequest)
                 .stream()
-                .map(LotDTO::fromLotToLotDTO)
+                .map(AllDTORealization::fromLotToLotDTO)
                 .collect(Collectors.toList());
     }
     public Collection<FullLotDTO> getAllFullLots() {
         return lotRepository.findAll()
                 .stream()
-                .map(FullLotDTO::fromLotToFullLotDTO)
+                .map(AllDTORealization::fromLotToFullLotDTO)
                 .collect(Collectors.toList());
     }
     private Integer sumCurrentPrice(Long lotId, Integer lotBidPrice, Integer lotStartPrice) {
-        return (int) (bidRepository.getBidderCount(lotId) * lotBidPrice + lotStartPrice);
+        return (int) (bidRepository.getCountNumberOfBidByLotId(lotId) * lotBidPrice + lotStartPrice);
     }
     public FullLotDTO getFullLotById (Long id) {
-        FullLotDTO fullLotDTO = FullLotDTO.fromLotDTOToFullLotDTO(getLotById(id));
+        FullLotDTO fullLotDTO = AllDTORealization.fromLotDTOToFullLotDTO(getLotById(id));
         Integer currentPrice = sumCurrentPrice(id, fullLotDTO.getBidPrice(), fullLotDTO.getStartPrice());
         fullLotDTO.setCurrentPrice(currentPrice);
-        fullLotDTO.setLastBid(findInfoABoutLastBid(id));
+        fullLotDTO.setLastBid(getLastBidForLot(id));
         return fullLotDTO;
+    }
+    public String getLastBidForLot (Long lotId) {
+        FullLotDTO fullLotDTO = new FullLotDTO();
+        fullLotDTO.setLastBid(bidRepository.findByBidDateMax(lotId).getBidderName());
+        return String.valueOf(fullLotDTO);
     }
 //    public LotDTO updateStatusStopped (Long lotId, String lotStatus) {
 //        Lot updateInfoAboutLot = lotRepository.updateLotStatus(lotId, lotStatus);
 //        return LotDTO.fromLot(updateInfoAboutLot);
 //    }
-    public LotDTO getLotById (Long lotId) {
-        return LotDTO.fromLot(lotRepository.findById(lotId).get());
+    public LotDTO getLotById (Long id) {
+        return AllDTORealization.fromLotToLotDTO(lotRepository.findById(id).get());
     }
     public void updateStatusToStarted(Long id) {
         Lot lot = lotRepository.findById(id).get();
