@@ -12,8 +12,8 @@ public class CreateLotDTO {
     private Long id;
     private String title;
     private String description;
-    private int startPrice;
-    private int bidPrice;
+    private Long startPrice;
+    private Long bidPrice;
     public static Lot fromCreatedLotDTOToLot(CreateLotDTO createdLotDTO){
         Lot lot = new Lot();
         lot.setId(createdLotDTO.getId());

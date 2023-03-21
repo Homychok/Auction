@@ -12,8 +12,8 @@ public class LotDTO {
     private LotStatus status;
     private String title;
     private String description;
-    private Integer startPrice;
-    private Integer bidPrice;
+    private Long startPrice;
+    private Long bidPrice;
 
     public static LotDTO fromLotToLotDTO(Lot lot) {
         LotDTO dto = new LotDTO();

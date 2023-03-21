@@ -15,8 +15,8 @@ public class FullLotDTO {
     private String title;
     private String description;
     private Long currentPrice;
-    private Integer startPrice;
-    private Integer bidPrice;
+    private Long startPrice;
+    private Long bidPrice;
 //    public static FullLotDTO fromLotDTOToFullLotDTO (LotDTO lotDTO) {
 //        FullLotDTO fullLotDTO = new FullLotDTO();
 //        fullLotDTO.setId(lotDTO.getId());

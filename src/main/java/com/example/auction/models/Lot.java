@@ -23,9 +23,9 @@ public class Lot {
     @Column(name = "description")
     private String description;
     @Column(name = "start_price")
-    private Integer startPrice;
+    private Long startPrice;
     @Column(name = "bid_price")
-    private Integer bidPrice;
+    private Long bidPrice;
     private String lastBid;
     private Long currentPrice;
     @OneToMany(mappedBy = "lot")

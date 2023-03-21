@@ -138,9 +138,18 @@ public class LotService {
 //                .getLotBidPrice();
 //    }
 
-//    public FullLotDTO createNewFullLot (FullLotDTO fullLotDTO) {
+    //    public FullLotDTO createNewFullLot (FullLotDTO fullLotDTO) {
 //        Lot lot = fullLotDTO.toFullLot();
 //        Lot createNewFullLot = lotRepository.save(lot);
 //        return FullLotDTO.fromFullLot(createNewFullLot);
 //    }
+    public boolean checkMistakeInCreatingLot(CreateLotDTO createLotDTO) {
+        if(createLotDTO.getTitle() == null || createLotDTO.getTitle().isBlank() ||
+                createLotDTO.getDescription() == null || createLotDTO.getDescription().isBlank() ||
+        createLotDTO.getStartPrice() == null || createLotDTO.getBidPrice() == null){
+            return false;
+        } else {
+            return true;
+        }
+    }
 }
