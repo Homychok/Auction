@@ -2,7 +2,6 @@ package com.example.auction.services;
 
 import com.example.auction.dto.*;
 import com.example.auction.enums.LotStatus;
-import com.example.auction.models.Bid;
 import com.example.auction.models.Lot;
 import com.example.auction.repositories.BidRepository;
 import com.example.auction.repositories.LotRepository;
@@ -20,6 +19,7 @@ import java.util.stream.Collectors;
 public class LotService {
     private LotRepository lotRepository;
     private BidRepository bidRepository;
+    private BidDTO bidDTO;
     public LotService(LotRepository lotRepository) {
         this.lotRepository = lotRepository;
     }
@@ -49,20 +49,21 @@ public class LotService {
                 .map(FullLotDTO::fromLotToFullLotDTO)
                 .collect(Collectors.toList());
     }
-    private Integer sumCurrentPrice(Long lotId, Integer lotBidPrice, Integer lotStartPrice) {
-        return (int) (bidRepository.getCountNumberOfBidByLotId(lotId) * lotBidPrice + lotStartPrice);
+    private Integer totalPrice(Long lotId, Integer bidPrice, Integer startPrice) {
+        return (int) (bidRepository.getCountNumberOfBidByLotId(lotId) * bidPrice + startPrice);
     }
     public FullLotDTO getFullLotById (Long id) {
         FullLotDTO fullLotDTO = FullLotDTO.fromLotDTOToFullLotDTO(getLotById(id));
-        Integer currentPrice = sumCurrentPrice(id, fullLotDTO.getBidPrice(), fullLotDTO.getStartPrice());
+        Integer currentPrice = totalPrice(id, fullLotDTO.getBidPrice(), fullLotDTO.getStartPrice());
         fullLotDTO.setCurrentPrice(currentPrice);
-        fullLotDTO.setLastBid(getLastBidForLot(id));
+        fullLotDTO.setLastBid(getLastBidForLot(bidDTO.getLotId()));
         return fullLotDTO;
     }
-    public String getLastBidForLot (Long lotId) {
-        FullLotDTO fullLotDTO = new FullLotDTO();
-        fullLotDTO.setLastBid(bidRepository.findByBidDateMax(lotId).getBidderName());
-        return String.valueOf(fullLotDTO);
+    public BidDTOForFullLotDTO getLastBidForLot (Long lotId) {
+        BidDTOForFullLotDTO bidDTOForFullLotDTO = new BidDTOForFullLotDTO();
+        bidDTOForFullLotDTO.setBidderName(bidRepository.findByBidDateMax(lotId).getBidderName());
+        bidDTOForFullLotDTO.setBidDate(bidRepository.findByBidDateMax(lotId).getBidDate());
+        return bidDTOForFullLotDTO;
     }
 //    public LotDTO updateStatusStopped (Long lotId, String lotStatus) {
 //        Lot updateInfoAboutLot = lotRepository.updateLotStatus(lotId, lotStatus);

@@ -1,19 +1,19 @@
 package com.example.auction.services;
 
 import com.example.auction.dto.BidDTO;
+import com.example.auction.dto.BidDTOForFullLotDTO;
 import com.example.auction.dto.LotDTO;
 import com.example.auction.models.Bid;
 import com.example.auction.models.Lot;
 import com.example.auction.repositories.BidRepository;
 import com.example.auction.repositories.LotRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-
+@Slf4j
 @Service
-@Transactional
 public class BidService {
     private BidRepository bidRepository;
     private LotRepository lotRepository;
@@ -27,14 +27,20 @@ public class BidService {
         this.bidRepository = bidRepository;
         this.lotService = lotService;
     }
-
-    public BidDTO createNewBidder (BidDTO bidDTO) {
-        Lot lot = LotDTO.fromLotDTOToLot(lotService.getLotById(bidDTO.getLotId()));
+    public BidDTO createBid (BidDTO bidDTO) {
         Bid bid = BidDTO.fromBidDTOtoBid(bidDTO);
+        bid.setBidderName(bid.getBidderName());
+//        bid.setBidDate(bid.getBidDate());
+        Bid newBid = bidRepository.save(bid);
+        return BidDTO.fromBidToBidDTO(newBid);
+    }
+    public BidDTOForFullLotDTO createNewBidder (BidDTOForFullLotDTO bidDToForFullLotDTO) {
+        Lot lot = LotDTO.fromLotDTOToLot(lotService.getLotById(bidDToForFullLotDTO.getLotId()));
+        Bid bid = BidDTOForFullLotDTO.fromBidDToForFullLotDTOtoBid(bidDToForFullLotDTO);
         bid.setLot(lot);
         bid.setBidDate(LocalDateTime.now());
         Bid createNewBidder = bidRepository.save(bid);
-        return BidDTO.fromBidToBidDTO(createNewBidder);
+        return BidDTOForFullLotDTO.fromBidToBidDToForFullLotDTO(createNewBidder);
 //        FullLotDTO lot = FullLotDTO.fromLotToFullLotDTO(lotService.getLotById(l).getId());
 //        BidDTO bid = BidDTO.fromBid(new Bid());
 //        bid.setLotId(bid.getBidderName().g);
@@ -45,8 +51,8 @@ public class BidService {
     public Long getFirstBidderByLotId (Long id, Long lotId) {
         return bidRepository.findByBidDateMin(id, lotId);
     }
-    public Long getMaxBiddersOfBidByLotId(Long id, Long lotId) {
-        return bidRepository.getMaxBiddersOfBidByLotId(id, lotId);
+    public String getMaxBiddersOfBidByLotId(Long lotId) {
+        return bidRepository.getMaxBidders(lotId);
     }
 //        public BidDTO getBidderById (Long id) {
 //        return BidDTO.fromBid(bidRepository.findById(id).get());

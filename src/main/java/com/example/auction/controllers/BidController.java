@@ -1,26 +1,35 @@
-//package com.example.auction.controllers;
-//
-//import com.example.auction.dto.BidDTO;
-//import com.example.auction.dto.LotDTO;
-//import com.example.auction.models.Bid;
-//import com.example.auction.services.BidService;
-//import com.example.auction.services.LotService;
-//import org.springframework.http.HttpStatus;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.web.bind.annotation.*;
-//
-//import java.time.LocalDateTime;
-//import java.util.Collection;
-//
-//@RestController
-//@RequestMapping("bidders")
-//public class BidController {
-//    private BidService bidService;
-//    private LotService lotService;
-//
-//    public BidController(BidService bidService) {
-//        this.bidService = bidService;
-//    }
+package com.example.auction.controllers;
+
+import com.example.auction.dto.BidDTO;
+import com.example.auction.dto.LotDTO;
+import com.example.auction.enums.LotStatus;
+import com.example.auction.models.Bid;
+import com.example.auction.services.BidService;
+import com.example.auction.services.LotService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
+import java.util.Collection;
+
+@RestController
+@RequestMapping("bid")
+public class BidController {
+    private BidService bidService;
+    private LotService lotService;
+
+    public BidController(BidService bidService) {
+        this.bidService = bidService;
+    }
+    /*
+0.Создает нового участника ставок
+*/
+    @PostMapping
+    public ResponseEntity<BidDTO> createNewBidder(@RequestBody BidDTO bidDTO) {
+        BidDTO createNewBid = bidService.createBid(bidDTO);
+        return ResponseEntity.ok(createNewBid);
+    }
 //    /*
 //    Возвращает участника аукциона по id
 //     */
@@ -102,4 +111,4 @@
 //        bidService.deleteBidderById(bidderId);
 //        return ResponseEntity.ok().build();
 //    }
-//}
+}

@@ -8,7 +8,7 @@ import com.example.auction.enums.LotStatus;
 @Data
 @NoArgsConstructor
 public class FullLotDTO {
-    private String lastBid;
+    private BidDTOForFullLotDTO lastBid;
     private Long id;
     private LotStatus status;
     private String title;
