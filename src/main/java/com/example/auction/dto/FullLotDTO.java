@@ -1,6 +1,5 @@
 package com.example.auction.dto;
 
-import com.example.auction.models.Bid;
 import com.example.auction.models.Lot;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,31 +16,6 @@ public class FullLotDTO {
     private Long currentPrice;
     private Long startPrice;
     private Long bidPrice;
-//    public static FullLotDTO fromLotDTOToFullLotDTO (LotDTO lotDTO) {
-//        FullLotDTO fullLotDTO = new FullLotDTO();
-//        fullLotDTO.setId(lotDTO.getId());
-//        fullLotDTO.setStatus(lotDTO.getStatus());
-//        fullLotDTO.setTitle(lotDTO.getTitle());
-//        fullLotDTO.setDescription(lotDTO.getDescription());
-//        fullLotDTO.setBidPrice(lotDTO.getBidPrice());
-//        fullLotDTO.setStartPrice(lotDTO.getStartPrice());
-////        fullLotDTO.setCurrentPrice(lotDTO.getCurrentPrice());
-////        fullLotDTO.setLastBid(lotDTO.getLastBid());
-//        return fullLotDTO;
-//    }
-//
-//    public static FullLotDTO fromLotToFullLotDTO(Lot lot) {
-//        FullLotDTO fullLotDTO = new FullLotDTO();
-//        fullLotDTO.setId(lot.getId());
-//        fullLotDTO.setStatus(lot.getStatus());
-//        fullLotDTO.setTitle(lot.getTitle());
-//        fullLotDTO.setDescription(lot.getDescription());
-//        fullLotDTO.setStartPrice(lot.getStartPrice());
-//        fullLotDTO.setBidPrice(lot.getBidPrice());
-//        fullLotDTO.setCurrentPrice(lot.getCurrentPrice());
-//        fullLotDTO.setLastBid(lot.getLastBid());
-//        return fullLotDTO;
-//    }
 public static FullLotDTO fromLotDTOToFullLotDTO (LotDTO lotDTO) {
     FullLotDTO fullDTO = new FullLotDTO();
     fullDTO.setId(lotDTO.getId());

@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-import com.example.auction.models.Lot;
 
 @Entity
 @Data
@@ -20,10 +19,7 @@ public class Bid {
     private String bidderName;
     @Column(name = "bid_date")
     private LocalDateTime bidDate;
-//    @Column(name = "id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Lot lot;
-
-//    private Long lotId;
 
 }

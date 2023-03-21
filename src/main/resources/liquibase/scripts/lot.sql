@@ -13,3 +13,6 @@ CREATE TABLE lot (
 );
 -- changeset Homychok:2
 ALTER TABLE lot ALTER COLUMN current_price TYPE BIGINT;
+-- changeset Homychok:3
+ALTER TABLE lot ALTER COLUMN start_price TYPE BIGINT;
+ALTER TABLE lot ALTER COLUMN bid_price TYPE BIGINT;

@@ -10,14 +10,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class BidDTOForFullLotDTO {
     private Long id;
-//    @JsonIgnore //не выводит это поле
     private String bidderName;
     @JsonIgnore
     private LocalDateTime bidDate;
-    //    @JsonIgnore
     private Long lotId;
-    //    private Integer startPrice;
-//    private Integer bidPrice;
     public static BidDTOForFullLotDTO fromBidToBidDToForFullLotDTO(Bid bid) {
         BidDTOForFullLotDTO bidDTOForFullLotDTO = new BidDTOForFullLotDTO();
         bidDTOForFullLotDTO.setId(bid.getId());

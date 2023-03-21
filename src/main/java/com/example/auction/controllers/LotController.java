@@ -2,13 +2,11 @@ package com.example.auction.controllers;
 
 import com.example.auction.dto.*;
 import com.example.auction.enums.LotStatus;
-import com.example.auction.models.Lot;
 import com.example.auction.services.BidService;
 import com.example.auction.services.LotService;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -86,14 +84,6 @@ public class LotController {
             return ResponseEntity.status(200).body("Лот переведен в статус начато");
         }
         return ResponseEntity.ok().build();
-//        LotDTO updateInfoAboutLot = lotService.updateStatus(id, "STARTED");
-//        if (updateInfoAboutLot == null) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-//        }
-//        if (id == null) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-//        }
-//        return ResponseEntity.ok(updateInfoAboutLot);
     }
     /*
 5.Сделать ставку по лоту
@@ -134,13 +124,6 @@ public class LotController {
             return ResponseEntity.status(200).body("Лот переведен в статус остановлен");
 
         }
-//        LotDTO updateInfoAboutLot = lotService.updateStatus(id, "STOPPED");
-//        if (updateInfoAboutLot == null) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-//        }
-//        if (id == null) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-//        }
         return ResponseEntity.ok().build();
     }
     /*
@@ -194,116 +177,6 @@ public class LotController {
         pWriter.flush();
         pWriter.close();
     }
-//
-//    @GetMapping("{lotTitle}") // GET http://localhost:8080/lots/str
-//    public ResponseEntity<LotDTO> getLotByTitle(@RequestParam String lotTitle) {
-//        LotDTO lot = lotService.getLotByTitle(lotTitle);
-//        if (lotTitle.isBlank()) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-//        }
-//        return ResponseEntity.ok(lot);
-//    }
-
-//Ненужные методы:
-//    @GetMapping// GET http://localhost:8080/lots
-//    public ResponseEntity<Collection<LotDTO>> getLotsByStatus(@RequestParam(required = false) String lotStatus) {
-//        if (lotStatus.isBlank()) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-//        }
-//        return ResponseEntity.ok(lotService.getLotsByStatus(lotStatus));
-//    }
-//
-//    @GetMapping("{lotId}/bidders") // GET http://localhost:8080/lots/3/lots
-//    public ResponseEntity<Collection<BidDTO>> getBiddersByLotId(@PathVariable Long lotId) {
-//        return ResponseEntity.ok(lotService.getBiddersByLotId(lotId));
-//    }
-//
-//    @GetMapping(value = "/{lotId}/picture/preview")
-//    public ResponseEntity<byte[]> downloadPicture(@PathVariable Long lotId) {
-//        LotsPic lotsPic = lotsPicService.getLotsPic(lotId);
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.parseMediaType(lotsPic.getMediaType()));
-//        headers.setContentLength(lotsPic.getPreview().length);
-//        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(lotsPic.getPreview());
-//    }
-
-
-//    @PutMapping("{lotId}")// PUT http://localhost:8080/lots
-//    public ResponseEntity<LotDTO> updateStatusAboutLot(@RequestBody LotDTO lotDTO) {
-//        LotDTO updateInfoAboutLot = lotService.updateInfoAboutLot(lotDTO);
-//        if (updateInfoAboutLot == null) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-//        }
-//        return ResponseEntity.ok(updateInfoAboutLot);
-//    }
-///*
-//убрать лот с аукциона
-// */
-//    @DeleteMapping("{lotId}") // DELETE http://localhost:8080/lots/3
-//    public ResponseEntity<Lot> deleteLotById(@PathVariable Long lotId) {
-//        lotService.deleteLotById(lotId);
-//        return ResponseEntity.ok().build();
-//    }
-//
-//    /*
-//    Возвращает участника аукциона по id
-//     */
-//    @GetMapping("{bidderId}")// GET http://localhost:8080/bidders/3
-//    public ResponseEntity<BidDTO> getBid(@PathVariable Long bidderId) {
-//        BidDTO bid = bidService.getBidderById(bidderId);
-//        if (bid == null) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-//        }
-//        return ResponseEntity.ok(bid);
-//    }
-//    /*
-//    Возвращает всех участников аукциона
-//     */
-//    @GetMapping // GET http://localhost:8080/bidders
-//    public ResponseEntity<Collection<BidDTO>> getBidders(@RequestParam(required = false) LocalDateTime bidDate) {
-//        if (bidDate != null) {
-//            return ResponseEntity.ok(bidService.getBidderByDate(bidDate));
-//        }
-//        return ResponseEntity.ok(bidService.getAllBidders());
-//    }
-
-    //    @GetMapping("{bidderId}/lots") // GET http://localhost:8080/bidders/3/lots
-//    public ResponseEntity<LotDTO> getLotByBidderId(@PathVariable Long bidderId) {
-//        return ResponseEntity.ok(bidService.getLotByBidderId(bidderId));
-//    }
-//
-//    /*
-//    Возвращает последнего ставившего на этот лот
-// */
-//    @GetMapping("/lastBidder")
-//    public ResponseEntity<Long> getLastBidderByLotId(int bidderId, Long lotId) {
-//        return ResponseEntity.ok(bidService.getLastBidderByLotId(bidderId, lotId));
-//    }
-//    /*
-//Возвращает наибольшее количество ставок на этот лот
-//*/
-//    @GetMapping("/countBidder")
-//    public ResponseEntity<Long> getCountNumberOfBidByLotId(int bidderId, Long lotId) {
-//        return ResponseEntity.ok(bidService.getCountNumberOfBidByLotId(bidderId, lotId));
-//    }
-//
-//
-//    @PutMapping// PUT http://localhost:8080/bidders
-//    public ResponseEntity<BidDTO> updateInfoAboutBidder(@RequestBody BidDTO bidDTO) {
-//        BidDTO updateInfoAboutBidder = bidService.updateInfoAboutBidder(bidDTO);
-//        if (updateInfoAboutBidder == null) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-//        }
-//        return ResponseEntity.ok(updateInfoAboutBidder);
-//    }
-//
-//    @DeleteMapping("{bidderId}")// DELETE http://localhost:8080/bidders/3
-//    public ResponseEntity<Bid> deleteBidderById(@PathVariable Long bidderId) {
-//        bidService.deleteBidderById(bidderId);
-//        return ResponseEntity.ok().build();
-//    }
-
 }
 
 
