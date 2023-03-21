@@ -2,7 +2,6 @@ package com.example.auction.controllers;
 
 import com.example.auction.dto.*;
 import com.example.auction.enums.LotStatus;
-import com.example.auction.models.Bid;
 import com.example.auction.models.Lot;
 import com.example.auction.services.BidService;
 import com.example.auction.services.LotService;
@@ -36,28 +35,31 @@ public class LotController {
     /*
 1.Возвращает первого ставившего на этот лот
  */
-    @GetMapping("/{id}/first")
-    public ResponseEntity<Long> getFirstBidderByLotId(@PathVariable(name = "id of bid") Long id,
-                                                      @PathVariable(name = "id of lot for choosen bid") Long lotId) {
-        return ResponseEntity.ok(bidService.getFirstBidderByLotId(id, lotId));
+    @GetMapping("/{lotId}/first")
+    public ResponseEntity<?> getFirstBidderByLotId(@PathVariable Long lotId) {
+        BidDTOForFullLotDTO firstBidder = bidService.getFirstBidderByLotId(lotId);
+        if (firstBidder == null) {
+            return ResponseEntity.status(404).body("Лот не найден");
+        }
+        return ResponseEntity.ok(firstBidder);
     }
     /*
 2.Возвращает имя ставившего на данный лот наибольшее количество раз
 */
-    @GetMapping("/{id}/frequent")
-    public ResponseEntity<String> getMaxBiddersOfBidByLotId(@RequestParam(name = "id of lot for choosen bid") Long lotId) {
+    @GetMapping("/{lotId}/frequent")
+    public ResponseEntity<BidDTOForFullLotDTO> getMaxBiddersOfBidByLotId(@RequestParam(name = "id of lot for choosen bid") Long lotId) {
         return ResponseEntity.ok(bidService.getMaxBiddersOfBidByLotId(lotId));
     }
 /*
 3.Получить полную информацию о лоте
  */
     @GetMapping("/{id}")
-    public ResponseEntity<FullLotDTO> getFullLotById(@RequestParam(name = "id of lot") Long id) {
+    public ResponseEntity<FullLotDTO> getFullLotById(@PathVariable Long id) {
         FullLotDTO lotDTO = lotService.getFullLotById(id);
-        if (id == null) {
+        if (lotDTO == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        return ResponseEntity.ok(lotDTO);
+        return ResponseEntity.ok(lotService.getFullLotById(id));
     }
     /*
     4.Начать торги по лоту
@@ -94,16 +96,19 @@ public class LotController {
 5.Сделать ставку по лоту
  */
     @PostMapping("/{id}/bid")
-    public ResponseEntity<Bid> createNewBidder(@RequestBody BidDTOForFullLotDTO bidDToForFullLotDTO,
-                                               @RequestParam(name = "id of lot") Long id) {
+    public ResponseEntity<?> createNewBidder(@RequestBody BidDTOForFullLotDTO bidDTOForFullLotDTO,
+                                               @PathVariable Long id) {
         LotDTO findInfoAboutLot = lotService.getLotById(id);
-        if (findInfoAboutLot == null || findInfoAboutLot.getStatus().equals(LotStatus.STOPPED) ||
-                findInfoAboutLot.getStatus().equals(LotStatus.CREATED)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        if (findInfoAboutLot == null) {
+            return ResponseEntity.status(404).body("Лот не найден");
         }
-        bidDToForFullLotDTO.setLotId(bidDToForFullLotDTO.getLotId());
-        bidService.createNewBidder(bidDToForFullLotDTO);
-        return ResponseEntity.ok().build();
+        if (findInfoAboutLot.getStatus().equals(LotStatus.STOPPED) ||
+                findInfoAboutLot.getStatus().equals(LotStatus.CREATED)) {
+            return ResponseEntity.status(400).body("Лот в неверном статусе");
+        }
+        bidDTOForFullLotDTO.setLotId(bidDTOForFullLotDTO.getLotId());
+        bidService.createNewBidder(bidDTOForFullLotDTO);
+        return ResponseEntity.status(200).body("Ставка создана");
     }
     /*
 6.Остановить торги по лоту

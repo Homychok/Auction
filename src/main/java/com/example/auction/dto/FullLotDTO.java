@@ -1,5 +1,6 @@
 package com.example.auction.dto;
 
+import com.example.auction.models.Bid;
 import com.example.auction.models.Lot;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,7 @@ public class FullLotDTO {
     private LotStatus status;
     private String title;
     private String description;
-    private Integer currentPrice;
+    private Long currentPrice;
     private Integer startPrice;
     private Integer bidPrice;
 //    public static FullLotDTO fromLotDTOToFullLotDTO (LotDTO lotDTO) {

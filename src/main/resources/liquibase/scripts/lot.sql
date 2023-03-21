@@ -11,4 +11,5 @@ CREATE TABLE lot (
                      current_price  INTEGER,
                      last_bid  varchar(255)
 );
-
+-- changeset Homychok:2
+ALTER TABLE lot ALTER COLUMN current_price TYPE BIGINT;

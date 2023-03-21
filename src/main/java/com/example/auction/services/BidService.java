@@ -48,10 +48,10 @@ public class BidService {
 //        BidDTO createNewBidder = bidRepository.save(bidDTO);
 //        return BidDTO.fromBid(createNewBidder);
     }
-    public Long getFirstBidderByLotId (Long id, Long lotId) {
-        return bidRepository.findByBidDateMin(id, lotId);
+    public BidDTOForFullLotDTO getFirstBidderByLotId (Long lotId) {
+        return bidRepository.findByBidDateMin(lotId);
     }
-    public String getMaxBiddersOfBidByLotId(Long lotId) {
+    public BidDTOForFullLotDTO getMaxBiddersOfBidByLotId(Long lotId) {
         return bidRepository.getMaxBidders(lotId);
     }
 //        public BidDTO getBidderById (Long id) {

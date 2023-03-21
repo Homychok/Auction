@@ -31,6 +31,7 @@ public class BidDTOForFullLotDTO {
         Bid bid = new Bid();
         bid.setId(bidDTOForFullLotDTO.getId());
         bid.setBidderName(bidDTOForFullLotDTO.getBidderName());
+        bid.setBidDate(LocalDateTime.now());
         return bid;
     }
 }

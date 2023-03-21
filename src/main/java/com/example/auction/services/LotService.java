@@ -19,12 +19,13 @@ import java.util.stream.Collectors;
 public class LotService {
     private LotRepository lotRepository;
     private BidRepository bidRepository;
-    private BidDTO bidDTO;
-    public LotService(LotRepository lotRepository) {
-        this.lotRepository = lotRepository;
-    }
+//    private BidDTO bidDTO;
+    private BidDTOForFullLotDTO bidDTOForFullLotDTO;
+//    public LotService(LotRepository lotRepository) {
+//        this.lotRepository = lotRepository;
+//    }
 
-    @Autowired
+//    @Autowired
     public LotService(BidRepository bidRepository, LotRepository lotRepository) {
         this.bidRepository = bidRepository;
         this.lotRepository = lotRepository;
@@ -49,14 +50,14 @@ public class LotService {
                 .map(FullLotDTO::fromLotToFullLotDTO)
                 .collect(Collectors.toList());
     }
-    private Integer totalPrice(Long lotId, Integer bidPrice, Integer startPrice) {
-        return (int) (bidRepository.getCountNumberOfBidByLotId(lotId) * bidPrice + startPrice);
+    private Long totalPrice(Long lotId, Integer bidPrice, Integer startPrice) {
+        return (bidRepository.getCountNumberOfBidByLotId(lotId) * bidPrice + startPrice);
     }
     public FullLotDTO getFullLotById (Long id) {
         FullLotDTO fullLotDTO = FullLotDTO.fromLotDTOToFullLotDTO(getLotById(id));
-        Integer currentPrice = totalPrice(id, fullLotDTO.getBidPrice(), fullLotDTO.getStartPrice());
+        Long currentPrice = totalPrice(id, fullLotDTO.getBidPrice(), fullLotDTO.getStartPrice());
         fullLotDTO.setCurrentPrice(currentPrice);
-        fullLotDTO.setLastBid(getLastBidForLot(bidDTO.getLotId()));
+        fullLotDTO.setLastBid(getLastBidForLot(bidDTOForFullLotDTO.getLotId()));
         return fullLotDTO;
     }
     public BidDTOForFullLotDTO getLastBidForLot (Long lotId) {
