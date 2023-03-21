@@ -15,6 +15,7 @@
 	<description>Auction</description>
 	<properties>
 		<java.version>11</java.version>
+<!--            <spring.profiles.active>local,no-liquibase</spring.profiles.active>-->
 	</properties>
 	<dependencies>
 		<dependency>
@@ -46,6 +47,21 @@
             <groupId> org.springdoc</groupId>
             <artifactId> springdoc-openapi-ui</artifactId>
             <version> 1.6.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
+            <version>1.9.0</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
         </dependency>
 
 

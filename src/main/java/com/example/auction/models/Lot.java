@@ -1,33 +1,33 @@
 package com.example.auction.models;
 
+import com.example.auction.enums.LotStatus;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
-import com.example.auction.models.Bid;
 @Entity
-@Table(name = "lot")
 @Data
 @NoArgsConstructor
 public class Lot {
+
     @Id
-    @Column(name = "lot_last_bid")
-    private int lotLastBid;
-    @Column(name = "lot_id")
-    private int lotId;
-    @Column(name = "lot_status")
-    private String lotStatus;
-    @Column(name = "lot_title")
-    private String lotTitle;
-    @Column(name = "lot_description", length=4096)
-    private String lotDescription;
-    @Column(name = "lot_current_price")
-    private int lotCurrentPrice;
-private int lotStartPrice;
-private int lotBidPrice;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    protected Long id;
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private LotStatus status;
+    @Column(name = "title")
+    private String title;
+    @Column(name = "description")
+    private String description;
+    @Column(name = "start_price")
+    private Long startPrice;
+    @Column(name = "bid_price")
+    private Long bidPrice;
+    private String lastBid;
+    private Long currentPrice;
     @OneToMany(mappedBy = "lot")
-    private List<Bid> students;
-
-
+    private List<Bid> bids;
 }

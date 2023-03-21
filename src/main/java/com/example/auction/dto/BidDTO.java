@@ -1,32 +1,55 @@
 package com.example.auction.dto;
 
 import com.example.auction.models.Bid;
-import com.example.auction.models.Lot;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 public class BidDTO {
+    @JsonIgnore //не выводит это поле
+    private Long id;
     private String bidderName;
+    @JsonIgnore
     private LocalDateTime bidDate;
-    private Lot lotId;
+//    @JsonIgnore
+    private Long lotId;
+//    private Integer startPrice;
+//    private Integer bidPrice;
+public static BidDTO fromBidToBidDTO(Bid bid) {
+    BidDTO dto = new BidDTO();
+    dto.setId(bid.getId());
+    dto.setBidderName(bid.getBidderName());
+    dto.setBidDate(bid.getBidDate());
+    return dto;
+}
 
-    public static BidDTO fromBid (Bid bid) {
-        BidDTO bidDTO = new BidDTO();
-        bidDTO.setBidDate(bid.getBidDate());
-        bidDTO.setBidderName(bid.getBidderName());
-        bidDTO.setLotId(bid.getLotId());
-        return bidDTO;
-    }
-
-    public Bid toBid() {
+    public static Bid fromBidDTOtoBid(BidDTO bidDTO) {
         Bid bid = new Bid();
-        bid.setBidDate(this.getBidDate());
-        bid.setBidderName(this.getBidderName());
-        bid.setLotId(this.getLotId());
+        bid.setId(bidDTO.getId());
+        bid.setBidderName(bidDTO.getBidderName());
         return bid;
     }
+//    public static BidDTO fromBid (Bid bid) {
+//        BidDTO bidDTO = new BidDTO();
+//        bidDTO.setId(bid.getId());
+//        bidDTO.setBidDate(bid.getBidDate());
+//        bidDTO.setBidderName(bid.getBidderName());
+////        bidDTO.setStartPrice(bid.getLot().getStartPrice());
+////        bidDTO.setBidPrice(bid.getLot().getBidPrice());
+//        bidDTO.setLotId(bid.getLot().getId());
+//        return bidDTO;
+//    }
+//
+//    public Bid toBidDTO(BidDTO bidDTO) {
+//        Bid bid = new Bid();
+////        bid.setLot(bidDTO.g);
+//        bid.setId(bidDTO.getId());
+//        bid.setBidDate(bidDTO.getBidDate());
+//        bid.setBidderName(bidDTO.getBidderName());
+//
+//        return bid;
+//    }
 }
