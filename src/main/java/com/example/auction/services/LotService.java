@@ -30,30 +30,30 @@ public class LotService {
         this.lotRepository = lotRepository;
     }
     public LotDTO createNewLot (CreateLotDTO createLotDTO) {
-        Lot lot = AllDTORealization.fromCreatedLotDTOToLot(createLotDTO);
+        Lot lot = CreateLotDTO.fromCreatedLotDTOToLot(createLotDTO);
         lot.setStatus(LotStatus.CREATED);
         Lot createNewLot = lotRepository.save(lot);
-        return AllDTORealization.fromLotToLotDTO(createNewLot);
+        return LotDTO.fromLotToLotDTO(createNewLot);
     }
 
     public List<LotDTO> getAllLotsByStatusOnPage (LotStatus lotStatus, Integer pageNumber) {
         PageRequest pageRequest = PageRequest.of(pageNumber - 1, 10);
         return lotRepository.findAllByStatus(lotStatus, pageRequest)
                 .stream()
-                .map(AllDTORealization::fromLotToLotDTO)
+                .map(LotDTO::fromLotToLotDTO)
                 .collect(Collectors.toList());
     }
     public Collection<FullLotDTO> getAllFullLots() {
         return lotRepository.findAll()
                 .stream()
-                .map(AllDTORealization::fromLotToFullLotDTO)
+                .map(FullLotDTO::fromLotToFullLotDTO)
                 .collect(Collectors.toList());
     }
     private Integer sumCurrentPrice(Long lotId, Integer lotBidPrice, Integer lotStartPrice) {
         return (int) (bidRepository.getCountNumberOfBidByLotId(lotId) * lotBidPrice + lotStartPrice);
     }
     public FullLotDTO getFullLotById (Long id) {
-        FullLotDTO fullLotDTO = AllDTORealization.fromLotDTOToFullLotDTO(getLotById(id));
+        FullLotDTO fullLotDTO = FullLotDTO.fromLotDTOToFullLotDTO(getLotById(id));
         Integer currentPrice = sumCurrentPrice(id, fullLotDTO.getBidPrice(), fullLotDTO.getStartPrice());
         fullLotDTO.setCurrentPrice(currentPrice);
         fullLotDTO.setLastBid(getLastBidForLot(id));
@@ -69,7 +69,7 @@ public class LotService {
 //        return LotDTO.fromLot(updateInfoAboutLot);
 //    }
     public LotDTO getLotById (Long id) {
-        return AllDTORealization.fromLotToLotDTO(lotRepository.findById(id).get());
+        return LotDTO.fromLotToLotDTO(lotRepository.findById(id).get());
     }
     public void updateStatusToStarted(Long id) {
         Lot lot = lotRepository.findById(id).get();

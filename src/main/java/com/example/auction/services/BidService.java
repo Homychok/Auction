@@ -1,8 +1,7 @@
 package com.example.auction.services;
 
-import com.example.auction.dto.AllDTORealization;
 import com.example.auction.dto.BidDTO;
-import com.example.auction.dto.FullLotDTO;
+import com.example.auction.dto.LotDTO;
 import com.example.auction.models.Bid;
 import com.example.auction.models.Lot;
 import com.example.auction.repositories.BidRepository;
@@ -30,12 +29,12 @@ public class BidService {
     }
 
     public BidDTO createNewBidder (BidDTO bidDTO) {
-        Lot lot = AllDTORealization.fromLotDTOToLot(lotService.getLotById(bidDTO.getLotId()));
-        Bid bid = AllDTORealization.fromBidDTOtoBid(bidDTO);
+        Lot lot = LotDTO.fromLotDTOToLot(lotService.getLotById(bidDTO.getLotId()));
+        Bid bid = BidDTO.fromBidDTOtoBid(bidDTO);
         bid.setLot(lot);
         bid.setBidDate(LocalDateTime.now());
         Bid createNewBidder = bidRepository.save(bid);
-        return AllDTORealization.fromBidToBidDTO(createNewBidder);
+        return BidDTO.fromBidToBidDTO(createNewBidder);
 //        FullLotDTO lot = FullLotDTO.fromLotToFullLotDTO(lotService.getLotById(l).getId());
 //        BidDTO bid = BidDTO.fromBid(new Bid());
 //        bid.setLotId(bid.getBidderName().g);

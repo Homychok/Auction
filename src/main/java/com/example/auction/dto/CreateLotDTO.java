@@ -12,6 +12,15 @@ public class CreateLotDTO {
     private String description;
     private int startPrice;
     private int bidPrice;
+    public static Lot fromCreatedLotDTOToLot(CreateLotDTO createdLotDTO){
+        Lot lot = new Lot();
+        lot.setId(createdLotDTO.getId());
+        lot.setTitle(createdLotDTO.getTitle());
+        lot.setDescription(createdLotDTO.getDescription());
+        lot.setStartPrice(createdLotDTO.getStartPrice());
+        lot.setBidPrice(createdLotDTO.getBidPrice());
+        return lot;
+    }
 //    public static Lot fromCreateLotDTO (CreateLotDTO createLotDTO) {
 //        Lot lot = new Lot();
 //        lot.setTitle(createLotDTO.getTitle());
