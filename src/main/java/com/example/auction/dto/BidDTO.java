@@ -15,17 +15,17 @@ public class BidDTO {
     @JsonIgnore//не выводит это поле
     private LocalDateTime bidDate;
     private Long lotId;
-public static BidDTO fromBidToBidDTO(Bid bid) {
-    BidDTO dto = new BidDTO();
-    dto.setId(bid.getId());
-    dto.setBidderName(bid.getBidderName());
-    dto.setBidDate(bid.getBidDate());
-    return dto;
+public static BidDTO fromBid(Bid bid) {
+    BidDTO bidDTO = new BidDTO();
+    bidDTO.setId(bid.getId());
+    bidDTO.setBidderName(bid.getBidderName());
+    bidDTO.setBidDate(bid.getBidDate());
+    return bidDTO;
 }
-    public static Bid fromBidDTOtoBid(BidDTO bidDTO) {
+    public Bid toBid() {
         Bid bid = new Bid();
-        bid.setId(bidDTO.getId());
-        bid.setBidderName(bidDTO.getBidderName());
+        bid.setId(this.getId());
+        bid.setBidderName(this.getBidderName());
         return bid;
     }
 }

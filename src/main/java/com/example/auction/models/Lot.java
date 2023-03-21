@@ -26,7 +26,6 @@ public class Lot {
     private Long startPrice;
     @Column(name = "bid_price")
     private Long bidPrice;
-    private String lastBid;
     private Long currentPrice;
     @OneToMany(mappedBy = "lot")
     private List<Bid> bids;

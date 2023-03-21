@@ -14,7 +14,7 @@ public class BidDTOForFullLotDTO {
     @JsonIgnore
     private LocalDateTime bidDate;
     private Long lotId;
-    public static BidDTOForFullLotDTO fromBidToBidDToForFullLotDTO(Bid bid) {
+    public static BidDTOForFullLotDTO fromBid(Bid bid) {
         BidDTOForFullLotDTO bidDTOForFullLotDTO = new BidDTOForFullLotDTO();
         bidDTOForFullLotDTO.setId(bid.getId());
         bidDTOForFullLotDTO.setBidderName(bid.getBidderName());
@@ -23,10 +23,10 @@ public class BidDTOForFullLotDTO {
         return bidDTOForFullLotDTO;
     }
 
-    public static Bid fromBidDToForFullLotDTOtoBid(BidDTOForFullLotDTO bidDTOForFullLotDTO) {
+    public Bid toBid() {
         Bid bid = new Bid();
-        bid.setId(bidDTOForFullLotDTO.getId());
-        bid.setBidderName(bidDTOForFullLotDTO.getBidderName());
+        bid.setId(this.getId());
+        bid.setBidderName(this.getBidderName());
         bid.setBidDate(LocalDateTime.now());
         return bid;
     }

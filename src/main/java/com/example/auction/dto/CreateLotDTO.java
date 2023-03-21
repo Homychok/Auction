@@ -8,19 +8,19 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class CreateLotDTO {
-    @JsonIgnore
-    private Long id;
+//    @JsonIgnore
+//    private Long id;
     private String title;
     private String description;
     private Long startPrice;
     private Long bidPrice;
-    public static Lot fromCreatedLotDTOToLot(CreateLotDTO createdLotDTO){
+    public Lot toLot(){
         Lot lot = new Lot();
-        lot.setId(createdLotDTO.getId());
-        lot.setTitle(createdLotDTO.getTitle());
-        lot.setDescription(createdLotDTO.getDescription());
-        lot.setStartPrice(createdLotDTO.getStartPrice());
-        lot.setBidPrice(createdLotDTO.getBidPrice());
+        lot.setId(lot.getId());
+        lot.setTitle(this.getTitle());
+        lot.setDescription(this.getDescription());
+        lot.setStartPrice(this.getStartPrice());
+        lot.setBidPrice(this.getBidPrice());
         return lot;
     }
 }
