@@ -1,32 +1,31 @@
 package com.example.auction.dto;
 
 import com.example.auction.models.Bid;
-import com.example.auction.models.Lot;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 public class BidDTO {
+    @JsonIgnore //не выводит это поле
+    private Long id;
     private String bidderName;
+    @JsonIgnore//не выводит это поле
     private LocalDateTime bidDate;
-    private Lot lotId;
-
-    public static BidDTO fromBid (Bid bid) {
-        BidDTO bidDTO = new BidDTO();
-        bidDTO.setBidDate(bid.getBidDate());
-        bidDTO.setBidderName(bid.getBidderName());
-        bidDTO.setLotId(bid.getLotId());
-        return bidDTO;
-    }
-
+    private Long lotId;
+public static BidDTO fromBid(Bid bid) {
+    BidDTO bidDTO = new BidDTO();
+    bidDTO.setId(bid.getId());
+    bidDTO.setBidderName(bid.getBidderName());
+    bidDTO.setBidDate(bid.getBidDate());
+    return bidDTO;
+}
     public Bid toBid() {
         Bid bid = new Bid();
-        bid.setBidDate(this.getBidDate());
+        bid.setId(this.getId());
         bid.setBidderName(this.getBidderName());
-        bid.setLotId(this.getLotId());
         return bid;
     }
 }

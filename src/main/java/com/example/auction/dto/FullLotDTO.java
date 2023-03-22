@@ -3,41 +3,40 @@ package com.example.auction.dto;
 import com.example.auction.models.Lot;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.example.auction.enums.LotStatus;
 
 @Data
 @NoArgsConstructor
 public class FullLotDTO {
-    private int lotLastBid;
-    private int lotId;
-    private String lotStatus;
-    private String lotTitle;
-    private String lotDescription;
-    private int lotCurrentPrice;
-    private int lotStartPrice;
-    private int lotBidPrice;
-    public static FullLotDTO fromLot (Lot lot) {
-        FullLotDTO fullLotDTO = new FullLotDTO();
-        fullLotDTO.setLotId(lot.getLotId());
-        fullLotDTO.setLotStatus(lot.getLotStatus());
-        fullLotDTO.setLotTitle(lot.getLotTitle());
-        fullLotDTO.setLotDescription(lot.getLotDescription());
-        fullLotDTO.setLotBidPrice(lot.getLotBidPrice());
-        fullLotDTO.setLotStartPrice(lot.getLotStartPrice());
-        fullLotDTO.setLotCurrentPrice(lot.getLotCurrentPrice());
-        fullLotDTO.setLotLastBid(lot.getLotLastBid());
-        return fullLotDTO;
-    }
+    private BidDTOForFullLotDTO lastBid;
+    private Long id;
+    private LotStatus status;
+    private String title;
+    private String description;
+    private Long currentPrice;
+    private Long startPrice;
+    private Long bidPrice;
+public static FullLotDTO fromLot(Lot lot) {
+    FullLotDTO fullDTO = new FullLotDTO();
+    fullDTO.setId(lot.getId());
+    fullDTO.setStatus(lot.getStatus());
+    fullDTO.setTitle(lot.getTitle());
+    fullDTO.setDescription(lot.getDescription());
+    fullDTO.setStartPrice(lot.getStartPrice());
+    fullDTO.setBidPrice(lot.getBidPrice());
+    fullDTO.setCurrentPrice(lot.getCurrentPrice());
+    return fullDTO;
+}
 
     public Lot toLot() {
         Lot lot = new Lot();
-        lot.setLotId(this.getLotId());
-        lot.setLotStatus(this.getLotStatus());
-        lot.setLotTitle(this.getLotTitle());
-        lot.setLotDescription(this.getLotDescription());
-        lot.setLotStartPrice(this.getLotStartPrice());
-        lot.setLotBidPrice(this.getLotBidPrice());
-        lot.setLotCurrentPrice(this.getLotCurrentPrice());
-        lot.setLotLastBid(this.getLotLastBid());
+        lot.setId(this.getId());
+        lot.setStatus(this.getStatus());
+        lot.setTitle(this.getTitle());
+        lot.setDescription(this.getDescription());
+        lot.setStartPrice(this.getStartPrice());
+        lot.setBidPrice(this.getBidPrice());
+        lot.setCurrentPrice(this.getCurrentPrice());
         return lot;
     }
 }
