@@ -1,6 +1,5 @@
 package com.example.auction.dto;
 
-import com.example.auction.models.Bid;
 import com.example.auction.models.Lot;
 import lombok.Data;
 import lombok.NoArgsConstructor;

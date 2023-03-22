@@ -3,6 +3,7 @@ import com.example.auction.dto.LotDTO;
 import com.example.auction.dto.BidDTO;
 import com.example.auction.dto.BidDTOForFullLotDTO;
 import com.example.auction.models.Bid;
+import com.example.auction.pojection.LotProjection;
 import com.example.auction.repositories.BidRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -34,13 +35,22 @@ public class BidService {
         bid.setBidDate(LocalDateTime.now());
         return BidDTOForFullLotDTO.fromBid(bidRepository.save(bid));
     }
-    public BidDTO getFirstBidderByLotId (Long lotId) {
-        return BidDTO.fromBid(bidRepository.findByBidDateMin(lotId));
+    public LotProjection getFirstBidderByLotId (Long lotId) {
+        return bidRepository.findByBidDateMin(lotId);
     }
-    public BidDTOForFullLotDTO getMaxBiddersOfBidByLotId(Long lotId) {
-        return BidDTOForFullLotDTO.fromBid(bidRepository.getMaxBidders(lotId));
+    public Bid getLastBidderByLotId (Long lotId) {
+        return bidRepository.findByBidDateMax(lotId);
+    }
+    public LotProjection getMaxBiddersOfBidByLotId(Long lotId) {
+        BidDTO bidDTO = new BidDTO();
+        bidDTO.setBidderName(bidRepository.findByBidDateMax(lotId).getBidderName());
+        bidDTO.setBidDate(bidRepository.findByBidDateMax(lotId).getBidDate());
+        return bidRepository.getMaxBidders(lotId);
     }
     public Long countTotalPrice(Long lotId) {
         return bidRepository.getCountNumberOfBidByLotId(lotId);
+    }
+    public BidDTOForFullLotDTO findLastBid(Long id) {
+        return BidDTOForFullLotDTO.fromBid(bidRepository.findByBidDateMax(id));
     }
 }

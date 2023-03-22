@@ -3,11 +3,13 @@ package com.example.auction.controllers;
 import com.example.auction.dto.*;
 import com.example.auction.enums.LotStatus;
 import com.example.auction.models.Bid;
+import com.example.auction.pojection.LotProjection;
 import com.example.auction.services.BidService;
 import com.example.auction.services.LotService;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,36 +38,47 @@ public class LotController {
  */
     @GetMapping("/{id}/first")
     public ResponseEntity<?> getFirstBidder(@PathVariable Long id) {
-        LotDTO lotDTO = lotService.getLotById(id);
-//        Bid firstBidder = bidService.getFirstBidderByLotId(lotId);
-        if (lotDTO == null) {
+//        LotDTO lotDTO = lotService.getLotById(id);
+        LotProjection firstBidder = bidService.getFirstBidderByLotId(id);
+        if (firstBidder == null) {
             return ResponseEntity.status(404).body("Лот не найден");
         }
-        return ResponseEntity.ok(lotDTO);
+
+        return ResponseEntity.ok(firstBidder);
     }
     /*
 2.Возвращает имя ставившего на данный лот наибольшее количество раз
 */
-    @GetMapping("/{lotId}/frequent")
-    public ResponseEntity<?> getMostFrequentBidder(@PathVariable Long lotId) {
-//        LotDTO lotDTO = lotService.getLastBidForLot()
-        BidDTOForFullLotDTO bidDTO = bidService.getMaxBiddersOfBidByLotId(lotId);
-        if (bidDTO == null) {
-            return ResponseEntity.status(404).body("Лот не найден");
-        }
-        return ResponseEntity.ok(bidDTO);
+    @GetMapping("/{id}/frequent")
+    public ResponseEntity<LotProjection> getMostFrequentBidder(@PathVariable Long id) {
+////        LotDTO lotDTO = lotService.getLastBidForLot()
+////        BidDTOForFullLotDTO bidDTO = bidService.getFirstBidderByLotId(lotId);
+//        if (lotService.getFirstBidderByLotId(id) == null) {
+//            return ResponseEntity.status(404).body("Лот не найден");
+//        }
+//        BidDTO lotBidder =
+            return ResponseEntity.ok(lotService.getLastBidForLot(id));
+//        return ResponseEntity.ok(lotBidder);
     }
 /*
 3.Получить полную информацию о лоте
  */
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getFullLot(@PathVariable Long id) {
-        FullLotDTO lotDTO = lotService.getFullLotById(id);
-        if (lotDTO == null) {
-            return ResponseEntity.status(404).body("Лот не найден");
-        }
-        return ResponseEntity.ok(lotDTO);
+//    @GetMapping("/{id}")
+//    public ResponseEntity<?> getFullLot(@PathVariable Long id) {
+//        FullLotDTO lotDTO = lotService.getFullLotById(id);
+//        if (lotDTO == null) {
+//            return ResponseEntity.status(404).body("Лот не найден");
+//        }
+//        return ResponseEntity.ok(lotDTO);
+//    }
+@GetMapping("/{id}")
+public ResponseEntity<?> getFullLot(@PathVariable Long id){
+    FullLotDTO fullLotDTO = lotService.getFullLot(id);
+    if (fullLotDTO != null){
+        return ResponseEntity.ok(fullLotDTO);
     }
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Лот не найден");
+}
     /*
     4.Начать торги по лоту
      */
@@ -180,6 +193,10 @@ public class LotController {
         pWriter.flush();
         pWriter.close();
     }
+    /*
+3.Получить полную информацию о лоте
+ */
+
 }
 
 
